@@ -1,0 +1,24 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  background-image: url("./background.png");
+  background-position: center;
+  background-size: cover;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+*{
+    scroll-snap-type: mandatory;
+    scrollbar-width: none;  /* Firefox */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.281);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
