@@ -57,34 +57,40 @@ exports.registerUser = asyncHandler(async (req, res) => {
         }
 });
 
-exports.authUser = asyncHandler(async (req, res) => {
-    const {email, password} = req.body;
+exports.authUser = async (req, res) => {
+    try{
+        const {email, password} = req.body;
 
-    const user = await User.findOne({email}).select('+password');
-    if(!user){
-        return res.status(400).json({
-                error: "user doesnt exist."
+        const user = await User.findOne({email}).select('+password');
+        if(!user){
+            return res.status(400).json({
+                    error: "user doesnt exist."
+                });
+        }
+
+        if(user && await user.matchPassword(password)) {
+            const userSend = await User.findOne({email});
+            const token = await userSend.generateToken();
+
+            const options = {
+                expires: new Date(Date.now()+90*24*60*60*1000),
+                httpOnly: true,            
+            };
+            res.status(200).cookie("token", token, options).json({
+                user: userSend,
+                token: token,
             });
+        }else{
+            return res.status(400).json({
+                    error: "invalid email or password."
+                });
+        }
+    }catch(error){
+        return res.status(500).json({
+                    error: "login error occured."
+                });
     }
-
-    if(user && await user.matchPassword(password)) {
-        const userSend = await User.findOne({email});
-        const token = await userSend.generateToken();
-
-        const options = {
-            expires: new Date(Date.now()+90*24*60*60*1000),
-            httpOnly: true,            
-        };
-        res.status(200).cookie("token", token, options).json({
-            user: userSend,
-            token: token,
-        });
-    }else{
-        return res.status(400).json({
-                error: "invalid email or password."
-            });
-    }
-});
+};
 
 
 exports.myProfile = asyncHandler(async (req, res) => {
