@@ -36,9 +36,7 @@ userModel.pre("save", async function(next){
 });
 
 userModel.methods.generateToken = function () {
-    return jwt.sign({_id: this._id}, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    return jwt.sign({_id: this._id}, process.env.JWT_SECRET);
 }
 
 

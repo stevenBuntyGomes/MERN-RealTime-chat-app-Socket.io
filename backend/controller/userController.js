@@ -46,13 +46,14 @@ exports.registerUser = asyncHandler(async (req, res) => {
         if(user){
             const userSend = await User.findOne({email});
             const token = await userSend.generateToken();
+
             return res.status(201).cookie("token", token, options).json({
               user: userSend,  
               token: token,
             });
         }else{
             return res.status(400).json({
-                error: "user not found."
+                error: "this is latest error register."
             });
         }
 });
@@ -87,7 +88,7 @@ exports.authUser = async (req, res) => {
         }
     }catch(error){
         return res.status(500).json({
-                    error: error,
+                    error: "this is latest error register",
                 });
     }
 };
