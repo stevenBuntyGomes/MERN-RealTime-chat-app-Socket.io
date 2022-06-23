@@ -1,8 +1,6 @@
 const express = require('express');
 const chats = require('./data/data');
-const dotenv = require('dotenv');
 const connect_database = require('./config/db');
-dotenv.config({path: "backend/config/config.env"});
 const colors = require('colors');
 const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require('./routes/chatRoutes');
@@ -15,7 +13,9 @@ const path = require("path");
 
 const app = express();
 
-app.use(express.json());
+if(process.env.NODE_ENV !== "production"){
+    require('dotenv').config({path: "backend/config/config.env"});
+}
 
 
 // routes and controllers inside server.js.. will be modified
@@ -43,22 +43,16 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
 
 // deployment starts
-if(process.env.NODE_ENV == "production"){
-  app.use(express.static(path.join(__dirname, "../frontend/build")));
-  app.get("*", (req, res) => {
-      res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
-  });
-}else{
-  app.get('/', (req, res) => {
-    res.send("API is running properly");
-  });
-}
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
+});
 
 // deployment ends
 
 
 
-const server = app.listen(process.env.PORT || 4000, console.log( `the server has started at ${process.env.PORT}`.yellow.bold));
+const server = app.listen(process.env.PORT || 5000, console.log( `the server has started at ${process.env.PORT}`.yellow.bold));
 
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
