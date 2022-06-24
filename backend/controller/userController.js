@@ -86,7 +86,8 @@ exports.authUser = async (req, res) => {
             return res.status(200).json({
                 success: "reached here",
                 user: authUser,
-                token: generateToken(authUser._id),
+                // token: generateToken(authUser._id),
+                id: authUser._id,
             });
 
             
@@ -106,7 +107,7 @@ exports.authUser = async (req, res) => {
         }
     }catch(error){
         return res.status(500).json({
-                    error: "aaa",
+                    error: "bbb",
                 });
     }
 };
