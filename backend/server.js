@@ -38,9 +38,9 @@ app.use(cookieParser());
 //     res.send("API is running properly");
 // });
 
-app.use('/api/user', userRoutes);
-app.use('/api/chat', chatRoutes);
-app.use('/api/message', messageRoutes);
+app.use('/api/user/', userRoutes);
+app.use('/api/chat/', chatRoutes);
+app.use('/api/message/', messageRoutes);
 
 // deployment starts
 app.use(express.static(path.join(__dirname, "../frontend/build")));
@@ -52,7 +52,7 @@ app.get("*", (req, res) => {
 
 
 
-const server = app.listen(process.env.PORT || 5000, () => {
+const server = app.listen(process.env.PORT, () => {
   console.log( `the server has started at ${process.env.PORT}`.yellow.bold);
 });
 

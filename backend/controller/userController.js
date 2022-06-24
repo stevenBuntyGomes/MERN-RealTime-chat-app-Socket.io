@@ -77,6 +77,11 @@ exports.authUser = async (req, res) => {
         }
 
         if(user && await user.matchPassword(password)) {
+            const authUser = await User.findById(user._id);
+            return res.status(200).json({
+                success: "reached here",
+                user: authUser,
+            })
             
             const token = await user.generateToken();
 
