@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/userModel');
 const cloudinary = require('cloudinary');
+const generateToken = require('../middlewares/generateToken');
 
 exports.registerUser = asyncHandler(async (req, res) => {
     
@@ -44,12 +45,12 @@ exports.registerUser = asyncHandler(async (req, res) => {
             });
         }
 
-        const token = await user.generateToken();
+        const token = generateToken(user._id);
 
-        const options = {
-            expires: new Date(Date.now()+90*24*60*60*1000),
-            httpOnly: true,            
-        };
+        // const options = {
+        //     expires: new Date(Date.now()+90*24*60*60*1000),
+        //     httpOnly: true,            
+        // };
 
         
         const userSend = await User.findById(user._id);
@@ -78,11 +79,7 @@ exports.authUser = async (req, res) => {
 
         if(user && await user.matchPassword(password)) {
             const authUser = await User.findById(user._id);
-            const token = await authUser.generateToken();
-            const options = {
-                expires: new Date(Date.now()+90*24*60*60*1000),
-                httpOnly: true,            
-            };
+            const token = generateToken(authUser._id);
             
             
             
