@@ -79,14 +79,14 @@ exports.authUser = async (req, res) => {
 
         if(user && await user.matchPassword(password)) {
             const authUser = await User.findById(user._id);
-            const token = generateToken(authUser._id);
+            // const token = generateToken(authUser._id);
             
             
             
             return res.status(200).json({
                 success: "reached here",
                 user: authUser,
-                token: token,
+                token: generateToken(authUser._id),
             });
 
             
@@ -106,7 +106,7 @@ exports.authUser = async (req, res) => {
         }
     }catch(error){
         return res.status(500).json({
-                    error: "this is latest error register",
+                    error: "aaa",
                 });
     }
 };
