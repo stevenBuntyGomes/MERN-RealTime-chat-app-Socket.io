@@ -38,24 +38,31 @@ exports.registerUser = asyncHandler(async (req, res) => {
             },
         });
 
+        if(!user){
+            return res.status(400).json({
+                error: "this is latest error register."
+            });
+        }
+
+        const token = await user.generateToken();
+
         const options = {
             expires: new Date(Date.now()+90*24*60*60*1000),
             httpOnly: true,            
         };
 
-        if(user){
-            const userSend = await User.findOne({email});
-            const token = await userSend.generateToken();
+        
+        const userSend = await User.findById(user._id);
 
-            return res.status(201).cookie("token", token, options).json({
-              user: userSend,  
-              token: token,
-            });
-        }else{
-            return res.status(400).json({
-                error: "this is latest error register."
-            });
-        }
+
+        res.status(201).cookie("token", token, options).json({
+            user: userSend,  
+            token: token,
+        });
+
+        
+
+        
 });
 
 exports.authUser = async (req, res) => {
@@ -70,21 +77,22 @@ exports.authUser = async (req, res) => {
         }
 
         if(user && await user.matchPassword(password)) {
-            const userSend = await User.findOne({email});
-            const token = await userSend.generateToken();
+            
+            const token = await user.generateToken();
 
             const options = {
-                expires: new Date(Date.now()+90*24*60*60*1000),
-                httpOnly: true,            
-            };
+            expires: new Date(Date.now()+90*24*60*60*1000),
+            httpOnly: true,            
+        };
+            const userSend = await User.findById(user._id);
             res.status(200).cookie("token", token, options).json({
                 user: userSend,
                 token: token,
             });
         }else{
             return res.status(400).json({
-                    error: "invalid email or password."
-                });
+                error: "invalid email or password."
+            });
         }
     }catch(error){
         return res.status(500).json({

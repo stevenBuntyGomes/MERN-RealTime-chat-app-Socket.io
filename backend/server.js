@@ -52,7 +52,9 @@ app.get("*", (req, res) => {
 
 
 
-const server = app.listen(process.env.PORT || 5000, console.log( `the server has started at ${process.env.PORT}`.yellow.bold));
+const server = app.listen(process.env.PORT || 5000, () => {
+  console.log( `the server has started at ${process.env.PORT}`.yellow.bold);
+});
 
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
