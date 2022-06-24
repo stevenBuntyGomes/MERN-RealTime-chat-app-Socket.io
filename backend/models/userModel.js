@@ -40,6 +40,7 @@ userModel.methods.generateToken = function () {
 }
 
 
+
 userModel.methods.matchPassword = async function (enterPassword) {
     return await bcrypt.compare(enterPassword, this.password);
 }

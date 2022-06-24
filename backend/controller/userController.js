@@ -72,26 +72,32 @@ exports.authUser = async (req, res) => {
         const user = await User.findOne({email}).select('+password');
         if(!user){
             return res.status(400).json({
-                    error: "user doesnt exist."
-                });
+                error: "user doesnt exist."
+            });
         }
 
         if(user && await user.matchPassword(password)) {
             const authUser = await User.findById(user._id);
+            const token = await authUser.generateToken();
+            const options = {
+                expires: new Date(Date.now()+90*24*60*60*1000),
+                httpOnly: true,            
+            };
             
             
-            const token = await user.generateToken();
+            
             return res.status(200).json({
                 success: "reached here",
                 user: authUser,
                 token: token,
             });
 
-            const options = {
-                expires: new Date(Date.now()+90*24*60*60*1000),
-                httpOnly: true,            
-            };
+            
             const userSend = await User.findById(user._id);
+            // const token = await userSend.generateToken();
+
+            
+
             res.status(200).cookie("token", token, options).json({
                 user: userSend,
                 token: token,
