@@ -27,7 +27,8 @@ import { isSameSender, isLastMessage } from '../../config/ChatLogics';
 import animationData from "../../Animations/typing.json";
 import Lottie from "react-lottie";
 import io from 'socket.io-client';
-const ENDPOINT = "http://localhost:5000/";
+// const ENDPOINT = "http://localhost:5000/";
+const ENDPOINT = "https://steven-bunty-chat-app-mern.herokuapp.com/";
 var socket, selectedChatCompare;
 
 const SingleChat = ({fetchAgain, setFetchAgain}) => {
